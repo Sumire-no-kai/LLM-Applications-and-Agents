@@ -6,7 +6,7 @@ Harness 指模型之外、把 LLM 变成可工作 agent 的全部部分：agent 
 
 ## M1　Harness 本体与 agent loop
 
-**1.1 Harness 的定义与分层**
+### 1.1 Harness 的定义与分层
 - **级**：基础
 - **深**：
   - Agent = Model + Harness。harness 是模型之外的全部代码、配置和执行逻辑：system prompt、工具、沙箱、记忆、上下文管理、自检循环、子 agent 编排。
@@ -19,7 +19,7 @@ Harness 指模型之外、把 LLM 变成可工作 agent 的全部部分：agent 
 - **问**：harness 和 LangGraph、OpenAI Agents SDK 是什么关系？同一个模型换一套 harness，分数为什么会变？
 - **源**：H1 H2 H3 H4 H7
 
-**1.2 Agent loop 与停止条件**
+### 1.2 Agent loop 与停止条件
 - **级**：基础
 - **深**：
   - 能手写这个循环：messages 加 tools 发给模型 → 模型返回 tool_use → harness 执行 → 把 tool_result 追加回去再调用模型 → 直到模型不再调工具（end_turn）为止。
@@ -29,7 +29,7 @@ Harness 指模型之外、把 LLM 变成可工作 agent 的全部部分：agent 
 - **问**：写出 loop 的伪代码。怎么防止死循环和成本失控？一次返回多个 tool call 时怎么执行？
 - **源**：H5 H6
 
-**1.3 Workflow 与 agent**
+### 1.3 Workflow 与 agent
 - **级**：基础
 - **深**：
   - workflow 是用预先写好的代码路径来编排 LLM；agent 是由 LLM 动态决定流程和用哪些工具。
@@ -38,7 +38,7 @@ Harness 指模型之外、把 LLM 变成可工作 agent 的全部部分：agent 
 - **问**：什么样的任务不该做成 agent？
 - **源**：H6
 
-**1.4 长时程 harness**
+### 1.4 长时程 harness
 - **级**：进阶
 - **深**：
   - initializer agent 先建好三样东西：feature 列表（JSON，初始全部标为 failing）、进度文件、git 提交。
@@ -50,7 +50,7 @@ Harness 指模型之外、把 LLM 变成可工作 agent 的全部部分：agent 
 
 ## M2　提示词工程、上下文工程与 Harness
 
-**2.1 三者的关系**
+### 2.1 三者的关系
 - **级**：基础
 - **深**：
   - prompt engineering：把指令本身写好。
@@ -59,7 +59,7 @@ Harness 指模型之外、把 LLM 变成可工作 agent 的全部部分：agent 
 - **问**：原题 Q2。为什么 context engineering 不等于「写更长的 prompt」？
 - **源**：H8 H11
 
-**2.2 Context rot 与 attention budget**
+### 2.2 Context rot 与 attention budget
 - **级**：基础→进阶
 - **深**：
   - 输入越长性能越差，而且离窗口上限还很远时就开始下降。Chroma 测的 18 个模型全部如此，下降程度还受干扰项、needle 与问题相似度的影响。
@@ -68,7 +68,7 @@ Harness 指模型之外、把 LLM 变成可工作 agent 的全部部分：agent 
 - **问**：模型都有 1M 上下文了，还需要管理上下文吗？
 - **源**：H8 H9 H10
 
-**2.3 管理上下文的手段**
+### 2.3 管理上下文的手段
 - **级**：进阶
 - **深**：
   - 四类手段：write、select、compress、isolate。
@@ -83,7 +83,7 @@ Harness 指模型之外、把 LLM 变成可工作 agent 的全部部分：agent 
 
 ## M3　工具与 MCP
 
-**3.1 Function calling 与结构化输出**
+### 3.1 Function calling 与结构化输出
 - **级**：基础
 - **深**：
   - 工具由名称、描述和 JSON Schema 组成。模型只「提出」调用，真正执行的是 harness。
@@ -92,7 +92,7 @@ Harness 指模型之外、把 LLM 变成可工作 agent 的全部部分：agent 
 - **问**：模型给出非法参数，或者编出一个不存在的工具名，harness 怎么处理？
 - **源**：H13
 
-**3.2 工具设计（ACI，agent-computer interface）**
+### 3.2 工具设计（ACI，agent-computer interface）
 - **级**：进阶
 - **深**：
   - 工具少而精，按服务做 namespacing。
@@ -103,7 +103,7 @@ Harness 指模型之外、把 LLM 变成可工作 agent 的全部部分：agent 
 - **问**：给 agent 设计一个 `search_logs` 工具，参数和返回值怎么定？
 - **源**：H6 H14
 
-**3.3 MCP 架构与传输**
+### 3.3 MCP 架构与传输
 - **级**：基础→进阶
 - **深**：
   - host、client、server 三方，基于 JSON-RPC 2.0。
@@ -118,7 +118,7 @@ Harness 指模型之外、把 LLM 变成可工作 agent 的全部部分：agent 
 - **问**：MCP 和 function calling 是什么关系？stdio 和 Streamable HTTP 怎么选？
 - **源**：H15 H16
 
-**3.4 MCP 授权**
+### 3.4 MCP 授权
 - **级**：进阶
 - **深**：
   - MCP server 的角色是 OAuth 2.1 resource server。客户端通过它的 Protected Resource Metadata（RFC 9728）找到授权服务器，授权时用 PKCE。
@@ -130,7 +130,7 @@ Harness 指模型之外、把 LLM 变成可工作 agent 的全部部分：agent 
 - **问**：MCP server 需要调用下游的 GitHub API，能不能直接转发用户的 token？
 - **源**：H17 H18
 
-**3.5 工具多了怎么选**
+### 3.5 工具多了怎么选
 - **级**：进阶／前沿
 - **深**：
   - 工具定义本身就占上下文，工具一多，选择准确率也会下降。
@@ -143,7 +143,7 @@ Harness 指模型之外、把 LLM 变成可工作 agent 的全部部分：agent 
 
 ## M4　Skills、Subagents 与多 agent
 
-**4.1 Agent Skills**
+### 4.1 Agent Skills
 - **级**：进阶
 - **深**：
   - 一个 skill 是一个目录：SKILL.md（YAML 里写 name 和 description，正文写指令），可以附带脚本和资源。
@@ -157,7 +157,7 @@ Harness 指模型之外、把 LLM 变成可工作 agent 的全部部分：agent 
 - **问**：skill 和 tool、MCP、system prompt 有什么区别？装了 100 个 skill，为什么不会撑爆上下文？
 - **源**：H21 H22 H23
 
-**4.2 Subagents**
+### 4.2 Subagents
 - **级**：进阶
 - **深**：
   - 子 agent 有自己独立的上下文，只拿到父 agent 传来的 prompt 字符串，最后一条消息作为 tool result 返回给父 agent。
@@ -166,7 +166,7 @@ Harness 指模型之外、把 LLM 变成可工作 agent 的全部部分：agent 
 - **问**：subagent 解决什么问题？什么时候用了反而更差？
 - **源**：H24
 
-**4.3 Orchestrator-worker、handoff、agent-as-tool、A2A**
+### 4.3 Orchestrator-worker、handoff、agent-as-tool、A2A
 - **级**：进阶
 - **深**：
   - Anthropic 的 Research 系统：lead agent 并行派出 3–5 个 subagent，效果比单个 Opus 4 高 90.2%，但消耗约为普通 chat 的 15 倍 token；token 用量能解释 BrowseComp 上 80% 的得分差异。
@@ -179,7 +179,7 @@ Harness 指模型之外、把 LLM 变成可工作 agent 的全部部分：agent 
 
 ## M5　Hooks 与生命周期
 
-**5.1 Hooks**
+### 5.1 Hooks
 - **级**：进阶
 - **深**：
   - hook 是挂在 loop 固定节点上的确定性代码，不占上下文。
@@ -193,7 +193,7 @@ Harness 指模型之外、把 LLM 变成可工作 agent 的全部部分：agent 
 
 ## M6　沙箱与隔离
 
-**6.1 概念与动机**
+### 6.1 概念与动机
 - **级**：基础
 - **深**：
   - 沙箱是由操作系统或虚拟化强制执行的边界，限制命令及其子进程能读写哪些路径、能访问哪些网络、能用哪些系统调用和资源。
@@ -204,7 +204,7 @@ Harness 指模型之外、把 LLM 变成可工作 agent 的全部部分：agent 
 - **问**：原题 Q4。只做文件隔离行不行？
 - **源**：H31 H32
 
-**6.2 隔离技术谱系**
+### 6.2 隔离技术谱系
 - **级**：进阶
 - **深**：
   - 由弱到强：
@@ -218,7 +218,7 @@ Harness 指模型之外、把 LLM 变成可工作 agent 的全部部分：agent 
 - **问**：多租户 SaaS 要执行模型生成的代码，选 Docker、gVisor 还是 Firecracker？
 - **源**：H32 H33 H34 H35
 
-**6.3 网络出口与凭据隔离**
+### 6.3 网络出口与凭据隔离
 - **级**：进阶
 - **深**：
   - 网络出口走代理，按域名白名单放行。要能说出它的局限：
@@ -233,7 +233,7 @@ Harness 指模型之外、把 LLM 变成可工作 agent 的全部部分：agent 
 
 ## M7　安全与访问控制
 
-**7.1 权限模式与审批**
+### 7.1 权限模式与审批
 - **级**：基础
 - **深**：
   - 判定顺序：hooks → deny → ask → 权限模式 → allow → 回调。
@@ -244,7 +244,7 @@ Harness 指模型之外、把 LLM 变成可工作 agent 的全部部分：agent 
 - **问**：原题 Q5。怎样避免审批疲劳，又不至于放任？
 - **源**：H29 H35 H37 H38
 
-**7.2 Prompt injection**
+### 7.2 Prompt injection
 - **级**：进阶→前沿
 - **深**：
   - 直接注入：用户自己越狱。
@@ -259,7 +259,7 @@ Harness 指模型之外、把 LLM 变成可工作 agent 的全部部分：agent 
 - **问**：邮件助手读到一封恶意邮件后把客户数据外发了，从架构上怎么防？
 - **源**：H39 H40 H41 H42 H43
 
-**7.3 最小权限、秘钥与审计**
+### 7.3 最小权限、秘钥与审计
 - **级**：基础
 - **深**：
   - 工具、路径、域名一律用白名单。
@@ -269,7 +269,7 @@ Harness 指模型之外、把 LLM 变成可工作 agent 的全部部分：agent 
 - **问**：agent 要用第三方 API key，怎么做到模型看不到、也泄露不出去？
 - **源**：H32 H44
 
-**7.4 多用户多角色：限制 tools 和 skills**
+### 7.4 多用户多角色：限制 tools 和 skills
 - **级**：进阶
 - **深**：核心原则是授权由 harness 和工具层确定性地执行，prompt 里的说明只是说明。分四层讲：
   - **身份**：
@@ -292,7 +292,7 @@ Harness 指模型之外、把 LLM 变成可工作 agent 的全部部分：agent 
 
 ## M8　记忆
 
-**8.1 短期记忆**
+### 8.1 短期记忆
 - **级**：基础
 - **深**：
   - 当前线程的消息历史和工作状态，CoALA 称为 working memory。
@@ -301,7 +301,7 @@ Harness 指模型之外、把 LLM 变成可工作 agent 的全部部分：agent 
 - **问**：短期记忆就等于 context window 吗？
 - **源**：H49 H50
 
-**8.2 长期记忆的类型**
+### 8.2 长期记忆的类型
 - **级**：基础
 - **深**：
   - CoALA 分三类：
@@ -320,7 +320,7 @@ Harness 指模型之外、把 LLM 变成可工作 agent 的全部部分：agent 
 - **问**：原题 Q7。procedural memory 在 agent 里具体长什么样？
 - **源**：H49 H50 H51 H52
 
-**8.3 存储、写入、检索、遗忘与安全**
+### 8.3 存储、写入、检索、遗忘与安全
 - **级**：进阶
 - **深**：
   - **存储**：
@@ -339,7 +339,7 @@ Harness 指模型之外、把 LLM 变成可工作 agent 的全部部分：agent 
 
 ## M9　规划、持久执行、人工介入、错误恢复
 
-**9.1 ReAct、plan-and-execute、reflection**
+### 9.1 ReAct、plan-and-execute、reflection
 - **级**：基础
 - **深**：
   - ReAct：推理和行动 / 观察交替进行。
@@ -349,7 +349,7 @@ Harness 指模型之外、把 LLM 变成可工作 agent 的全部部分：agent 
 - **问**：ReAct 和 plan-and-execute 各适合什么场景？
 - **源**：H2 H59 H60 H61
 
-**9.2 持久执行与人工介入（HITL）**
+### 9.2 持久执行与人工介入（HITL）
 - **级**：进阶
 - **深**：
   - LangGraph：checkpointer 配合 `thread_id` 保存状态；`interrupt()` 暂停等人工输入，`Command(resume=...)` 继续。
@@ -359,7 +359,7 @@ Harness 指模型之外、把 LLM 变成可工作 agent 的全部部分：agent 
 - **问**：agent 执行到一半崩溃了，怎么恢复，又不重复下单？
 - **源**：H5 H25 H62 H63
 
-**9.3 错误恢复**
+### 9.3 错误恢复
 - **级**：进阶
 - **深**：
   - 工具出错时，以 `is_error` 的 tool_result 回给模型，让它自己纠正。
@@ -372,7 +372,7 @@ Harness 指模型之外、把 LLM 变成可工作 agent 的全部部分：agent 
 
 ## M10　评估与可观测性
 
-**10.1 Agent evals**
+### 10.1 Agent evals
 - **级**：进阶
 - **深**：
   - 基本概念：task、trial、grader、transcript、outcome。
@@ -383,7 +383,7 @@ Harness 指模型之外、把 LLM 变成可工作 agent 的全部部分：agent 
 - **问**：给一个客服 agent 设计 eval。为什么要看 pass^k？
 - **源**：H3
 
-**10.2 基准及其局限**
+### 10.2 基准及其局限
 - **级**：进阶
 - **深**：
   - τ-bench：按对话结束时的数据库状态判分，并提出了 pass^k。τ²-bench 进一步让用户也能操作环境（dual-control）。
@@ -393,7 +393,7 @@ Harness 指模型之外、把 LLM 变成可工作 agent 的全部部分：agent 
 - **问**：某个模型 SWE-bench 分数很高，能说明它在你的业务里一定好用吗？
 - **源**：H65 H66 H67 H68
 
-**10.3 Tracing、成本与延迟**
+### 10.3 Tracing、成本与延迟
 - **级**：基础
 - **深**：
   - trace 是一棵 span 树：agent → 模型调用 → 工具调用，可以按 OTel GenAI 约定输出。
