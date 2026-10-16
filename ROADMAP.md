@@ -152,6 +152,7 @@ Harness 指模型之外、把 LLM 变成可工作 agent 的全部部分：agent 
   - 只读工具可以并行执行，有副作用的工具要串行。
 - **问**：写出 loop 的伪代码。怎么防止死循环和成本失控？一次返回多个 tool call 时怎么执行？
 - **源**：H5 H6
+- **笔记**：[手写一个 agent loop](Harness/01-agent-loop.md)
 
 #### 1.3 Workflow 与 agent
 - **级**：基础
